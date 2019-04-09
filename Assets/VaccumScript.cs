@@ -43,7 +43,7 @@ public class VaccumScript : MonoBehaviour
         {
             Direction = transform.forward * -speed;
             transform.Translate(Direction * Time.deltaTime, Space.World);
-
+            transform.Rotate(new Vector3(0, turnamount, 0) * Time.deltaTime, Space.World);
             if (tick < backupLength)
             {
                 tick += 1 * Time.deltaTime;
@@ -52,6 +52,7 @@ public class VaccumScript : MonoBehaviour
             else
             {
                 tick = 0;
+                reverse = false;
             }
         }
             

@@ -26,6 +26,9 @@ public class catScript0 : MonoBehaviour
     public Camera MainCam;
     public float TurnTolerance;
 
+
+    public bool InNoise;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -38,7 +41,8 @@ public class catScript0 : MonoBehaviour
         H = Input.GetAxis("Horizontal");
         V = Input.GetAxis("Vertical");
         MousePos = new Vector3(Screen.width / 2, Screen.height / 2, 0) - Input.mousePosition;
-
+        
+        //Rotation
         if(MousePos.x > TurnTolerance)
         {
             transform.Rotate(new Vector3(0, -turnSpeed, 0), Space.World);
@@ -47,15 +51,16 @@ public class catScript0 : MonoBehaviour
             transform.Rotate(new Vector3(0, turnSpeed, 0), Space.World);
         }
 
+        //Run
         if (Input.GetKey(KeyCode.LeftShift))
         {
             speed = runSpeed;
         }else if (Input.GetKey(KeyCode.LeftControl))
-        {
+        {//Now crouch
             speed = crouchSpeed;
         }
         else
-        {
+        {//Just walk
             speed = walkSpeed;
         }
 
@@ -79,5 +84,22 @@ public class catScript0 : MonoBehaviour
         
         MoveVector = new Vector3(V, 0, -H) * speed;
         transform.Translate(MoveVector * Time.deltaTime);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.transform.tag == "Noise")
+        {
+            InNoise = true;
+        }
+    }
+
+
+    private void OnTriggerExit(Collider other)
+    {
+        if(other.tag == "Noise")
+        {
+            InNoise = false;
+        }
     }
 }
