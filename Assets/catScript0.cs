@@ -27,7 +27,9 @@ public class catScript0 : MonoBehaviour
     public float TurnTolerance;
 
 
-    public bool InNoise;
+    public bool InNoise, action;
+
+    public GameObject myobject; //temporary hold for the object to interact with
 
     // Start is called before the first frame update
     void Start()
@@ -42,6 +44,9 @@ public class catScript0 : MonoBehaviour
         V = Input.GetAxis("Vertical");
         MousePos = new Vector3(Screen.width / 2, Screen.height / 2, 0) - Input.mousePosition;
         
+
+
+
         //Rotation
         if(MousePos.x > TurnTolerance)
         {
@@ -68,7 +73,7 @@ public class catScript0 : MonoBehaviour
         {
             if(jumpPower < jumpMax)
                 jumpPower += jumpChargeRate * Time.deltaTime;
-            Debug.Log(jumpPower);
+           
         }
 
         if (Input.GetKeyUp(KeyCode.Space))
@@ -77,14 +82,29 @@ public class catScript0 : MonoBehaviour
             jumpPower = 0;
             Debug.Log("Should jump");
         }
-        
 
-        
+
+        Boop();
 
         
         MoveVector = new Vector3(V, 0, -H) * speed;
         transform.Translate(MoveVector * Time.deltaTime);
     }
+
+
+    void Boop()
+    {
+        if(myobject != null)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                Debug.Log("boop");
+                myobject.GetComponent<CupScript>().Boop();
+                myobject = null;
+            }
+        }
+    }
+
 
     private void OnTriggerEnter(Collider other)
     {
