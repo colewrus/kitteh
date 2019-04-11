@@ -30,11 +30,21 @@ public class catScript0 : MonoBehaviour
     public bool InNoise, action;
 
     public GameObject myobject; //temporary hold for the object to interact with
+    public GameObject clickText;
+
+    public Vector3 lookAtStartingPos;
+    public GameObject lookAtObj;
+    
+   
+    
 
     // Start is called before the first frame update
     void Start()
     {
         speed = walkSpeed;
+        clickText.SetActive(false);
+        lookAtStartingPos = lookAtObj.transform.position;
+        Debug.Log("Difference: " + (transform.position - lookAtStartingPos));
     }
 
     // Update is called once per frame
@@ -83,9 +93,10 @@ public class catScript0 : MonoBehaviour
             Debug.Log("Should jump");
         }
 
-
         Boop();
+ 
 
+        
         
         MoveVector = new Vector3(V, 0, -H) * speed;
         transform.Translate(MoveVector * Time.deltaTime);
@@ -94,14 +105,17 @@ public class catScript0 : MonoBehaviour
 
     void Boop()
     {
-        if(myobject != null)
+        
+        if (myobject != null)
         {
+            clickText.SetActive(true);
             if (Input.GetMouseButtonDown(0))
             {
                 Debug.Log("boop");
                 myobject.GetComponent<CupScript>().Boop();
                 myobject = null;
             }
+            clickText.SetActive(false);
         }
     }
 

@@ -68,12 +68,12 @@ public class VaccumScript : MonoBehaviour
         if (collision != null)
         {
 
-            Debug.Log("bump");
+            
         }
 
         if (collision.transform.tag == "Furniture")
         {
-            Debug.Log("furniture");
+            
             reverse = true;
             tick = 0;
         }

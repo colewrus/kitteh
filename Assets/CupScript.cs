@@ -25,14 +25,14 @@ public class CupScript : MonoBehaviour
 
     public void Boop()
     {
-        
+        Debug.Log("boop");
         for(int i=0; i<cupPieces.Length; i++)
         {
             cupPieces[i].GetComponent<MeshRenderer>().material = mats[0];
             cupPieces[i].GetComponent<Rigidbody>().isKinematic = false;
+            cupPieces[i].GetComponent<Rigidbody>().AddForce(Vector3.right*5, ForceMode.Impulse);
         }
-        //brokenCup.SetActive(true);
-        //this.gameObject.GetComponent<MeshRenderer>().enabled = false; //look like it disappears
+
         this.GetComponent<BoxCollider>().enabled = false; //don't have a trigger for cat to find
         
         //remove the assignment to cat, place this in the cat's Boop function
@@ -44,7 +44,10 @@ public class CupScript : MonoBehaviour
         if(other.tag == "Player")
         {
             interactable = true;
-            other.GetComponent<catScript0>().myobject = this.gameObject;
+            other.GetComponent<catScript0>().myobject = this.gameObject; //assign the object to the cat
+           
+            
+
             for (int i = 0; i < cupPieces.Length; i++)
             {
                 cupPieces[i].GetComponent<MeshRenderer>().material = mats[1];
@@ -58,7 +61,9 @@ public class CupScript : MonoBehaviour
         if(other.tag == "Player")
         {
             other.GetComponent<catScript0>().myobject = null;
+            
             interactable = false;
+
             for (int i = 0; i < cupPieces.Length; i++)
             {
                 cupPieces[i].GetComponent<MeshRenderer>().material = mats[0];
