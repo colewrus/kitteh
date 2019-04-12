@@ -9,7 +9,7 @@ public class catScript0 : MonoBehaviour
     float H;
     float V;
     Vector3 MoveVector;
-    Vector3 MousePos; // returns the mouse position for rotating cat
+    public Vector3 MousePos; // returns the mouse position for rotating cat
 
     public float speed; //
     public float runSpeed; //
@@ -34,10 +34,12 @@ public class catScript0 : MonoBehaviour
 
     public Vector3 lookAtStartingPos;
     public GameObject lookAtObj;
-    
-   
+    public Vector3 lookAtOffset;
+    public float offsetX, offsetY;
     
 
+    public Cinemachine.CinemachineVirtualCamera myCamera;
+    public Cinemachine.CinemachineComposer myComposer;
     // Start is called before the first frame update
     void Start()
     {
@@ -45,6 +47,8 @@ public class catScript0 : MonoBehaviour
         clickText.SetActive(false);
         lookAtStartingPos = lookAtObj.transform.position;
         Debug.Log("Difference: " + (transform.position - lookAtStartingPos));
+        lookAtOffset = (transform.position - lookAtStartingPos);
+
     }
 
     // Update is called once per frame
@@ -53,18 +57,22 @@ public class catScript0 : MonoBehaviour
         H = Input.GetAxis("Horizontal");
         V = Input.GetAxis("Vertical");
         MousePos = new Vector3(Screen.width / 2, Screen.height / 2, 0) - Input.mousePosition;
+
+
+        
+        //Rotation        
+        if(MousePos.x > TurnTolerance)
+        {
+            float screenPercentX = Mathf.Abs(MousePos.x / (Screen.width / 2));
+            transform.Rotate(new Vector3(0, (-turnSpeed*screenPercentX)*Time.deltaTime, 0), Space.World);
+        }else if(MousePos.x < -TurnTolerance)
+        {
+            float screenPercentX = Mathf.Abs(MousePos.x / (Screen.width / 2));
+            transform.Rotate(new Vector3(0, (turnSpeed* screenPercentX)*Time.deltaTime, 0), Space.World);
+        }
         
 
 
-
-        //Rotation
-        if(MousePos.x > TurnTolerance)
-        {
-            transform.Rotate(new Vector3(0, -turnSpeed, 0), Space.World);
-        }else if(MousePos.x < -TurnTolerance)
-        {
-            transform.Rotate(new Vector3(0, turnSpeed, 0), Space.World);
-        }
 
         //Run
         if (Input.GetKey(KeyCode.LeftShift))
@@ -88,13 +96,13 @@ public class catScript0 : MonoBehaviour
 
         if (Input.GetKeyUp(KeyCode.Space))
         {
-            GetComponent<Rigidbody>().AddForce((transform.forward*2) + new Vector3(0, jumpPower, 0), ForceMode.Impulse);
+            GetComponent<Rigidbody>().AddForce(new Vector3(0, jumpPower, 0), ForceMode.Impulse);
             jumpPower = 0;
-            Debug.Log("Should jump");
+         
         }
 
         Boop();
- 
+        LookControl();
 
         
         
@@ -102,6 +110,22 @@ public class catScript0 : MonoBehaviour
         transform.Translate(MoveVector * Time.deltaTime);
     }
 
+
+    void LookControl()
+    {
+       
+
+        float screenPercentX = Mathf.Abs(MousePos.x / (Screen.width / 2));
+        float screenPercentY = Mathf.Abs(MousePos.y / (Screen.height / 2));
+
+      
+        float zPos = Mathf.Clamp(MousePos.x, -offsetX * screenPercentX, offsetX * screenPercentX);
+        float yPos = Mathf.Clamp(-MousePos.y, -offsetY * screenPercentY, offsetY * screenPercentY);
+
+        myComposer = myCamera.GetCinemachineComponent<Cinemachine.CinemachineComposer>(); //adjust the look at component of the 
+        myComposer.m_TrackedObjectOffset = new Vector3(0, yPos, zPos); ;
+        
+    }
 
     void Boop()
     {
@@ -111,7 +135,6 @@ public class catScript0 : MonoBehaviour
             clickText.SetActive(true);
             if (Input.GetMouseButtonDown(0))
             {
-                Debug.Log("boop");
                 myobject.GetComponent<CupScript>().Boop();
                 myobject = null;
             }
