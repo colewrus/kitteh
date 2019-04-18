@@ -143,20 +143,5 @@ public class catScript0 : MonoBehaviour
     }
 
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if(other.transform.tag == "Noise")
-        {
-            InNoise = true;
-        }
-    }
 
-
-    private void OnTriggerExit(Collider other)
-    {
-        if(other.tag == "Noise")
-        {
-            InNoise = false;
-        }
-    }
 }
